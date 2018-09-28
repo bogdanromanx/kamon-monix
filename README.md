@@ -43,5 +43,8 @@ task.runAsync
 The module also provides additional _withSpan_ methods that can wrap cats transformers for Monix's Task:
 `withSpanEitherT`, `withSpanOptionT`, `withSpanIorT`, `withSpanIdT` and `withSpanStateT`.
 
+The `kamon-monix-app` module in this repository shows a simple example of an application using this module with
+`kamon-akka-http` instrumentation and `kamon-jaeger` as a reporter.
+
 [sbt-aspectj-runner]: https://github.com/kamon-io/sbt-aspectj-runner
 [documentation]: http://kamon.io/documentation/1.x/recipes/adding-the-aspectj-weaver/
