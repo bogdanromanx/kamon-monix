@@ -25,13 +25,13 @@ scalafmt: {
  */
 
 // Dependency versions
-val akkaVersion          = "2.5.16"
-val akkaHttpVersion      = "10.1.5"
-val aspectJVersion       = "1.9.1"
-val kamonVersion         = "1.1.0"
-val kamonAkkaHttpVersion = "1.1.0"
+val akkaVersion          = "2.5.21"
+val akkaHttpVersion      = "10.1.7"
+val aspectJVersion       = "1.9.2"
+val kamonVersion         = "1.1.5"
+val kamonAkkaHttpVersion = "1.1.1"
 val kamonJaegerVersion   = "1.0.2"
-val monixVersion         = "3.0.0-RC1"
+val monixVersion         = "3.0.0-RC2"
 
 // Dependencies modules
 lazy val akka           = "com.typesafe.akka" %% "akka-actor"          % akkaVersion
@@ -64,11 +64,12 @@ lazy val app = project
 
 lazy val root = project
   .in(file("."))
+  .settings(noPublishSettings)
   .aggregate(kamonMonix, app)
 
 // format: off
 lazy val compilationSettings = Seq(
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.8",
   scalacOptions ++= Seq(
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
     "-encoding", "utf-8",                // Specify character encoding used by source files.
@@ -122,7 +123,8 @@ lazy val compilationSettings = Seq(
 
 lazy val commonSettings = compilationSettings ++ Seq(
   organization         := "com.github.bogdanromanx",
-  cancelable in Global := true
+  cancelable in Global := true,
+  publishMavenStyle    := true
 )
 
 lazy val noPublishSettings = Seq(

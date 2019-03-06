@@ -19,7 +19,8 @@ object Routes {
   def routes: Route = {
     (path("query") & get) {
       operationName("query") {
-        onSuccess(task.runAsync) { r => complete(r)
+        onSuccess(task.runToFuture) { r =>
+          complete(r)
         }
       }
     }
@@ -30,10 +31,10 @@ object Routes {
       for {
         _ <- Task.pure(1)
         _ <- withSpan("future") { Task.defer(Task.fromFuture(Future { Thread.sleep(50); 1 })) }
-        _ <- many("many", 3, par = false)
+        _ <- many("many", 3, par = false).asyncBoundary
         _ <- many("many", 3, par = true)
         _ <- left("leftie").value
-        _ <- right("rightie").value
+        _ <- right("rightie").value.asyncBoundary
         _ <- some("something").value
         _ <- fail("boom").onErrorRecover { case _ => () }
         _ <- some("somethingElse").value
@@ -45,7 +46,9 @@ object Routes {
     withSpan(name) {
       if (par) {
         // parallel execution of sub tasks
-        val tasks = 1 to count map { idx => one(s"one_$idx") }
+        val tasks = 1 to count map { idx =>
+          one(s"one_$idx")
+        }
         Task.gatherUnordered(tasks).map(_ => ())
       } else {
         // sequential execution of sub tasks

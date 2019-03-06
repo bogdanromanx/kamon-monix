@@ -1,4 +1,5 @@
 package kamon.monix
+
 import cats.data._
 import kamon.Kamon
 import kamon.trace.Span

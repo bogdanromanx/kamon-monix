@@ -3,36 +3,39 @@ package kamon.monix.instrumentation
 import kamon.Kamon
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.{Around, Aspect}
+import java.lang.{Long => JLong}
 
 import scala.concurrent.duration.TimeUnit
 
 @Aspect
 class MonixSchedulerInstrumentation {
 
-  @Around("execution(* monix.execution.Scheduler+.execute(..)) && args(runnable)")
-  def aroundExecute(pjp: ProceedingJoinPoint, runnable: Runnable): AnyRef = {
-    pjp.proceed(Array(new ContextAwareRunnable(runnable)))
+  @Around("execution(* monix.execution.Scheduler+.execute(..)) && args(command)")
+  def aroundExecute(pjp: ProceedingJoinPoint, command: Runnable): AnyRef = {
+    pjp.proceed(Array(new ContextAwareRunnable(command)))
   }
 
-  @Around("execution(* monix.execution.Scheduler+.scheduleOnce(..)) && args(initialDelay, unit, runnable)")
-  def aroundScheduleOnce(pjp: ProceedingJoinPoint, initialDelay: Long, unit: TimeUnit, runnable: Runnable): AnyRef = {
-    pjp.proceed(Array(initialDelay: java.lang.Long, unit, new ContextAwareRunnable(runnable)))
+  @Around("execution(* monix.execution.Scheduler+.scheduleOnce(..)) && args(initialDelay, unit, r)")
+  def aroundScheduleOnce(pjp: ProceedingJoinPoint, initialDelay: Long, unit: TimeUnit, r: Runnable): AnyRef = {
+    pjp.proceed(Array(initialDelay: JLong, unit, new ContextAwareRunnable(r)))
   }
 
-  @Around("execution(* monix.execution.Scheduler+.scheduleWithFixedDelay(..)) && args(initialDelay, unit, runnable)")
+  @Around("execution(* monix.execution.Scheduler+.scheduleWithFixedDelay(..)) && args(initialDelay, delay, unit, r)")
   def aroundScheduleWithFixedDelay(pjp: ProceedingJoinPoint,
                                    initialDelay: Long,
+                                   delay: Long,
                                    unit: TimeUnit,
-                                   runnable: Runnable): AnyRef = {
-    pjp.proceed(Array(initialDelay: java.lang.Long, unit, new ContextAwareRunnable(runnable)))
+                                   r: Runnable): AnyRef = {
+    pjp.proceed(Array(initialDelay: JLong, delay: JLong, unit, new ContextAwareRunnable(r)))
   }
 
-  @Around("execution(* monix.execution.Scheduler+.scheduleAtFixedRate(..)) && args(initialDelay, unit, runnable)")
+  @Around("execution(* monix.execution.Scheduler+.scheduleAtFixedRate(..)) && args(initialDelay, period, unit, r)")
   def aroundScheduleAtFixedRate(pjp: ProceedingJoinPoint,
                                 initialDelay: Long,
+                                period: Long,
                                 unit: TimeUnit,
-                                runnable: Runnable): AnyRef = {
-    pjp.proceed(Array(initialDelay: java.lang.Long, unit, new ContextAwareRunnable(runnable)))
+                                r: Runnable): AnyRef = {
+    pjp.proceed(Array(initialDelay: JLong, period: JLong, unit, new ContextAwareRunnable(r)))
   }
 }
 

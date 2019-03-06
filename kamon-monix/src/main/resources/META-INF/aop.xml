@@ -1,12 +1,12 @@
 <!DOCTYPE aspectj PUBLIC "-//AspectJ//DTD//EN" "http://www.eclipse.org/aspectj/dtd/aspectj.dtd">
 
 <aspectj>
-  <aspects>
-    <aspect name="kamon.monix.instrumentation.MonixSchedulerInstrumentation"/>
-  </aspects>
+    <weaver>
+        <include within="kamon.monix.instrumentation..*"/>
+        <include within="monix.execution..*"/>
+    </weaver>
 
-  <weaver>
-    <include within="kamon.monix.instrumentation..*"/>
-    <include within="monix.execution..*"/>
-  </weaver>
+    <aspects>
+        <aspect name="kamon.monix.instrumentation.MonixSchedulerInstrumentation"/>
+    </aspects>
 </aspectj>

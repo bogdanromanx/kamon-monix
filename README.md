@@ -6,11 +6,11 @@ your behalf.
 
 ### Adding the Module
 
-The module currently works with monix `3.0.0-RC1`. To get started add the following to your `build.sbt`.
+The module currently works with monix `3.0.0-RC2`. To get started add the following to your `build.sbt`.
 
 ```scala
 resolvers           += Resolver.bintrayRepo("bogdanromanx", "maven")
-libraryDependencies += "com.github.bogdanromanx" %% "kamon-monix" % "1.0.0-M1"
+libraryDependencies += "com.github.bogdanromanx" %% "kamon-monix" % "1.0.0-M2"
 ```
 
 ### Run
